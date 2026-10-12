@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.test
+logs
+*.log
+npm-debug.log*
+.idea/
+.DS_Store
+.devcontainer/

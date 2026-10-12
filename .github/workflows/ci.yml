@@ -1,0 +1,56 @@
+# CI-Pipeline für die finance-App
+# Läuft bei jedem Push und Pull Request: installiert die Abhängigkeiten,
+# prüft die Syntax, spielt das Datenbankschema in eine echte PostgreSQL-Datenbank
+# ein und testet Registrierung, Login und Sessions automatisch.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: finance
+          POSTGRES_PASSWORD: finance
+          POSTGRES_DB: finance
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DB_CON_STRING: postgres://finance:finance@localhost:5432/finance
+      PORT: 3000
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Syntax prüfen
+        run: |
+          node --check app.js
+          node --check db.js
+
+      - name: Datenbankschema einspielen
+        run: psql "$DB_CON_STRING" -v ON_ERROR_STOP=1 -f schema.sql
+
+      - name: Integrationstests ausführen
+        run: npm test

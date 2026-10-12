@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: transparent;
+        }
+        .navbar-brand {
+            color: #000000;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .btn-outline-white {
+            color: #000000;
+            border-color: #000000;
+        }
+        .btn-outline-white:hover {
+            background-color: #000000;
+            color: #fcf9f9;
+        }
+        .group-card {
+            background: #f8f9fa;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .group-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg px-4 py-3">
+    <a class="navbar-brand" href="{{#if loggedIn}}/dashboard{{else}}/{{/if}}">finance</a>
+    <div class="ms-auto d-flex gap-2">
+        {{#if loggedIn}}
+            <a href="/profile" class="btn btn-outline-white">Mein Profil</a>
+            <form method="post" action="/logout" style="margin:0">
+                <button type="submit" class="btn btn-white bg-white text-primary fw-bold">Abmelden</button>
+            </form>
+        {{else}}
+            <a href="/signup" class="btn btn-outline-white">Registrieren</a>
+            <a href="/login" class="btn btn-white bg-white text-primary fw-bold">Login</a>
+        {{/if}}
+    </div>
+</nav>
+
+<div class="container mt-4 text-white">
+    {{{body}}}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
